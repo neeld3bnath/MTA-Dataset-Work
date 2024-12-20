@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>MTA Delay Count</title>
+</head>
+
+<body>
+    <div>
+        <canvas id="myBarChart"></canvas>
+    </div>
+    <script>
+        async function fetchDataAndCreateChart() {
+            const response = await fetch("MTA Subway Trains Delayed Count.csv");
+            const data = await response.text();
+            const rows = data.split("\n").slice(1);
+            const labels = [];
+            const delays = [];
+
+            rows.forEach(row => {
+                const columns = row.split(",");
+                labels.push(columns[0]);
+                delays.push(parseInt(columns[1], 10));
+            });
+
+            const ctx = document.getElementById("myBarChart");
+            new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Sum of Delays",
+                        data: delays,
+                        backgroundColor: "rgba(75, 192, 192, 0.2)",
+                        borderColor: "rgba(75, 192, 192, 1)",
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: "MTA Subway Trains Delayed Count"
+                        }
+                    }
+                }
+            });
+        }
+
+        fetchDataAndCreateChart();
+    </script>
+</body>
+
+</html>
